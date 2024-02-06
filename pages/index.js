@@ -1,9 +1,12 @@
+import React, { useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "../styles/Home.module.css";
 
 export default function Home() {
+  const [Email, setEmail] = useState('');
+
   return (
     <div className={styles.container}>
       <Head>
@@ -13,8 +16,15 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>Summit QR Scanning</h1>
+
+        <h1 className={styles.title}>QR Scanning</h1>
         <hr height="1px" width="40%"/>
+        <label>
+          Input Email: <input value={Email} onChange={(e) => setEmail(e.target.value)} />
+        </label> 
+        <button type="submit" className={styles.qrButton} onClick={() => console.log({ Email })}>
+          Get my QR Code!
+        </button>
 
         <div className={styles.grid}>
           <Link href="/scan" className={styles.card}>
@@ -23,11 +33,11 @@ export default function Home() {
             </a>
           </Link>
           {" "}
-          {/* <Link href="/generate" className={styles.card}>
+          <Link href="/generate" className={styles.card}>
             <a>
               <h2> Generate a qr code&rarr;</h2>
             </a>
-          </Link> */}
+          </Link>
         </div>
       </main>
 
@@ -45,4 +55,9 @@ export default function Home() {
       </footer>
     </div>
   );
+
+  function handleSubmit(e) {
+    const formJson = Object.fromEntries(formData.entries());
+    console.log(formJson);
+  }
 }

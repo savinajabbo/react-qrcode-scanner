@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { QrReader } from "react-qr-reader";
 import styles from "../styles/Home.module.css";
-import Airtable from 'airtable';
-
-const base = new Airtable({
-  apiKey: process.env.patY9i30BliQovXfx.43d013236aa46c9dbd3bb38f5d6ed23f117b3c86eae1afe0d167c23d2fa0b472,
-  baseId: process.env.app4WOeGbjWwvZuGp,
-});
-
+import QRCode from 'react-qr-code';
 
 const successMessages = [
   "Welcome to the Summit",

@@ -165,3 +165,8 @@
   justify-content: center;
   align-items: center;
 }
+
+.qrButton {
+  background-color: #FFEC96;
+  color: #B42E1E;
+}
