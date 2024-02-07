@@ -8,7 +8,7 @@ const successMessages = [
   "You are checked in",
   "Welcome"
 ];
-
+ 
 export default function Scan() {
   const [data, setData] = useState("No result");
   const [showMessages, setShowMessages] = useState(true);

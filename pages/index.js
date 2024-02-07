@@ -33,7 +33,7 @@ export default function Home() {
             </a>
           </Link>
           {" "}
-          <Link href="/generate" className={styles.card}>
+          <Link href="/airtable" className={styles.card}>
             <a>
               <h2> Generate a qr code&rarr;</h2>
             </a>
