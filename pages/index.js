@@ -4,9 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "../styles/Home.module.css";
 import Airtable from 'airtable';
+import QRCode from "react-qr-code";
 
 export default function Home() {
   const [email, setEmail] = useState('');
+  const [qrCodeValue, setQrCodeValue] = useState("");
+  const [showQRCode, setShowQRCode] = useState(false);
 
   useEffect(() => {
     // Create a new instance of Airtable with your API key
@@ -27,6 +30,7 @@ export default function Home() {
           if (recordEmail === email) {
             const name = record.get('Name');
             const place = record.get('Place');
+            setQrCodeValue(`${name}|${place}`);
             console.log(`Found matching record! ${name}|${place}`);
           }
         });
@@ -43,7 +47,7 @@ export default function Home() {
       }
     );
   }, [email]); // The effect will re-run whenever the 'email' state changes
-  
+
 
   return (
     <div className={styles.container}>
@@ -64,22 +68,23 @@ export default function Home() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter email"
+            style={{ color: 'black' }}
           />
         </label> 
-        <button type="submit" className={styles.qrButton} onClick={() => console.log({ email })}>
+        <button type="submit" className={styles.qrButton} 
+          onClick={() => {
+            //handleGenerateQR();
+            setShowQRCode(true); // Show QR code on button click
+          }}
+        >
           Get my QR Code!
         </button>
+        {showQRCode && <QRCode value={qrCodeValue} />}
 
         <div className={styles.grid}>
           <Link href="/scan" className={styles.card}>
             <a>
               <h2>Scan QR Code &rarr;</h2>
-            </a>
-          </Link>
-          {" "}
-          <Link href="/generate" className={styles.card}>
-            <a>
-              <h2> Generate a qr code&rarr;</h2>
             </a>
           </Link>
         </div>
