@@ -1,11 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "../styles/Home.module.css";
+import Airtable from 'airtable';
 
 export default function Home() {
-  const [Email, setEmail] = useState('');
+  const [email, setEmail] = useState('');
+
+  useEffect(() => {
+    // Create a new instance of Airtable with your API key
+    const base = new Airtable({
+      apiKey: 'patY9i30BliQovXfx.43d013236aa46c9dbd3bb38f5d6ed23f117b3c86eae1afe0d167c23d2fa0b472'
+    }).base('app4WOeGbjWwvZuGp');
+
+    // Define the Airtable query
+    base('Attendees').select({
+      view: 'All Responses'
+    }).eachPage(
+      // Success callback
+      function page(records, fetchNextPage) {
+        records.forEach(function (record) {
+          const recordEmail = record.get('Email');
+
+          // Compare the email from the record with the input email
+          if (recordEmail === email) {
+            const name = record.get('Name');
+            const place = record.get('Place');
+            console.log(`Found matching record! ${name}|${place}`);
+          }
+        });
+
+        fetchNextPage(); // Fetch the next page of records
+      },
+      // Error callback
+      function done(err) {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        console.log('Data retrieval completed successfully.');
+      }
+    );
+  }, [email]); // The effect will re-run whenever the 'email' state changes
+  
 
   return (
     <div className={styles.container}>
@@ -20,9 +58,15 @@ export default function Home() {
         <h1 className={styles.title}>QR Scanning</h1>
         <hr height="1px" width="40%"/>
         <label>
-          Input Email: <input value={Email} onChange={(e) => setEmail(e.target.value)} />
+          Input Email: 
+          <input
+            type="text"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter email"
+          />
         </label> 
-        <button type="submit" className={styles.qrButton} onClick={() => console.log({ Email })}>
+        <button type="submit" className={styles.qrButton} onClick={() => console.log({ email })}>
           Get my QR Code!
         </button>
 
@@ -33,7 +77,7 @@ export default function Home() {
             </a>
           </Link>
           {" "}
-          <Link href="/airtable" className={styles.card}>
+          <Link href="/generate" className={styles.card}>
             <a>
               <h2> Generate a qr code&rarr;</h2>
             </a>

@@ -1,7 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Airtable from 'airtable';
 
 const MyComponent = () => {
+  const [email, setEmail] = useState('');
+
   useEffect(() => {
     // Create a new instance of Airtable with your API key
     const base = new Airtable({
@@ -10,14 +12,20 @@ const MyComponent = () => {
 
     // Define the Airtable query
     base('Attendees').select({
-      maxRecords: 3,
       view: 'All Responses'
     }).eachPage(
       // Success callback
       function page(records, fetchNextPage) {
         records.forEach(function (record) {
-          console.log('Retrieved', record.get('Name'));
+          const recordEmail = record.get('Email');
+
+          // Compare the email from the record with the input email
+          if (recordEmail === email) {
+            const name = record.get('Name');
+            console.log(`Found matching record! Name: ${name}, Email: ${recordEmail}`);
+          }
         });
+
         fetchNextPage(); // Fetch the next page of records
       },
       // Error callback
@@ -29,10 +37,18 @@ const MyComponent = () => {
         console.log('Data retrieval completed successfully.');
       }
     );
-  }, []); // The empty dependency array ensures that this effect runs once when the component mounts
+  }, [email]); // The effect will re-run whenever the 'email' state changes
 
   return (
     <div>
+      {/* Input field for email */}
+      <input
+        type="text"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Enter email"
+      />
+
       {/* Your component JSX */}
     </div>
   );
